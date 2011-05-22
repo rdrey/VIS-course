@@ -42,6 +42,8 @@ public class Book
         BookStats bookStats = new BookStats(week, year, revenue, ranking, this);
         if (statistics.size()> 0)
             statistics.peekLast().next = bookStats;
+        else
+            bookStats.isFirst = true;
         statistics.add(bookStats);
         return bookStats;
     }
@@ -64,6 +66,7 @@ public class Book
         public int ranking;
         public Book owner;
         public BookStats next;
+        public boolean isFirst;
 
         public BookStats(int week, int year, int revenue, int ranking, Book owner)
         {

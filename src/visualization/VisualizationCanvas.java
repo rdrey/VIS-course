@@ -137,7 +137,7 @@ public class VisualizationCanvas extends Canvas {
                     ranking++;
                     line = input.readLine();
                     input.readLine();
-                    System.out.println (owner);
+                    //System.out.println (owner);
                 }
             }
             catch (IOException e)
@@ -156,19 +156,27 @@ public class VisualizationCanvas extends Canvas {
         {
             LinkedList<Book.BookStats> currentBucket = buckets.get(i);
             int currentX = i * intervalWidth;
-            Iterator<Book.BookStats> it = currentBucket.descendingIterator();
+            Iterator<Book.BookStats> it = currentBucket.listIterator();
             while (it.hasNext())
             {
                 Book.BookStats stat = it.next();
-                int currentY = height-startY-(stat.ranking) * (barHeight + whiteSpaceHeight);
+                int currentY = height-startY-(16 - stat.ranking) * (barHeight + whiteSpaceHeight);
                 g.setColor(stat.owner.colour);
                 g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
                 if (stat.next != null)
                 {
-                    int nextY = height-startY-(stat.next.ranking) * (barHeight + whiteSpaceHeight);
+                    int nextY = height-startY-(16 - stat.next.ranking) * (barHeight + whiteSpaceHeight);
                     int y [] = {currentY, nextY, nextY+barHeight, currentY+barHeight};
                     int x [] = {currentX + intervalWidth/2, currentX + intervalWidth, currentX + intervalWidth, currentX + intervalWidth/2};
                     g.fillPolygon(x, y, 4);
+                }
+                if (stat.isFirst)
+                {
+                    g.setColor(Color.WHITE);
+                    if (stat.owner.title.length() < 15)
+                        g.drawString(stat.owner.title, currentX + 4, currentY+20);
+                    else
+                        g.drawString(stat.owner.title.substring(0,15) + "...", currentX + 4, currentY+20);
                 }
             }
         }
