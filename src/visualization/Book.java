@@ -6,7 +6,6 @@
 package visualization;
 
 import java.util.LinkedList;
-import java.awt.geom.*;
 /**
  *
  * @author Riz

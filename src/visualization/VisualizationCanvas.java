@@ -26,6 +26,26 @@ public class VisualizationCanvas extends Canvas {
         for (int i = 0; i < 22; i++)
             buckets.add(new LinkedList<Book.BookStats>());
         readSalesData();
+        
+        /*String s = null;
+        Process p = Runtime.getRuntime().exec("pwd");
+        BufferedReader stdInput = new BufferedReader(new 
+                 InputStreamReader(p.getInputStream()));
+
+            BufferedReader stdError = new BufferedReader(new 
+                 InputStreamReader(p.getErrorStream()));
+
+            // read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+            
+            // read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }*/
     }
 
     public void readSalesData()
@@ -34,7 +54,8 @@ public class VisualizationCanvas extends Canvas {
         {
             try
             {
-                BufferedReader input = new BufferedReader (new FileReader("build\\classes\\visualization\\Week " + (i+1) + ".txt"));
+                BufferedReader input = new BufferedReader (new FileReader("src/visualization/Week " + (i+1) + ".txt"));
+                            
                 int ranking = 1;
                 String line = input.readLine();
                 input.readLine();
