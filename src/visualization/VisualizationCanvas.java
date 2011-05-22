@@ -87,6 +87,7 @@ public class VisualizationCanvas extends Canvas {
         }
     }
 
+    @Override
     public void paint(Graphics g)
     {
         
