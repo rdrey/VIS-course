@@ -6,6 +6,7 @@
 package visualization;
 
 import java.util.LinkedList;
+import java.awt.Color;
 /**
  *
  * @author Riz
@@ -22,6 +23,7 @@ public class Book
     public LinkedList<String> words;
     public LinkedList<Integer> wordWeights;
     public LinkedList<BookStats> statistics;
+    public Color colour;
 
     public Book(String title, String author, String publisher, String description, float price, int moodIndex)
     {
@@ -38,6 +40,8 @@ public class Book
     public BookStats addStats(int week, int year, int revenue, int ranking)
     {
         BookStats bookStats = new BookStats(week, year, revenue, ranking, this);
+        if (statistics.size()> 0)
+            statistics.peekLast().next = bookStats;
         statistics.add(bookStats);
         return bookStats;
     }
@@ -59,6 +63,7 @@ public class Book
         public int revenue;
         public int ranking;
         public Book owner;
+        public BookStats next;
 
         public BookStats(int week, int year, int revenue, int ranking, Book owner)
         {
@@ -67,6 +72,7 @@ public class Book
             this.revenue = revenue;
             this.ranking = ranking;
             this.owner = owner;
+            next = null;
         }
     }
 }

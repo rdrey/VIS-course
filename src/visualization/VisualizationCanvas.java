@@ -15,7 +15,16 @@ import java.util.*;
  */
 public class VisualizationCanvas extends Canvas {
 
-    int centerY = 450, width = 2880, height = 2 * centerY;
+    // basic window dimensions
+    int centerY = 450, width = 5760, height = 2 * centerY;
+
+    // visualization dimensions
+    int startY = 64; // baseline of drawing
+    int barHeight = 32; // height of a single book's bar
+    int intervalWidth = 256; // width of time interval
+    int whiteSpaceHeight = 8; // height of white space between bars
+
+    // array of lists containing book data over time
     ArrayList<LinkedList<Book.BookStats>> buckets;
 
     public VisualizationCanvas()
@@ -91,7 +100,38 @@ public class VisualizationCanvas extends Canvas {
                         }
                     }
                     if (owner == null)
+                    {
                         owner = new Book(name, author, publisher, description, price, 0);
+                        
+                        // calculate colour
+                        Color col = null;
+                        int modI = i%4;
+                        int divI = i/4;
+                        switch(divI)
+                        {
+                            case 0:
+                                col = new Color(255 - ranking%4*32, modI*32,0);
+                                break;
+                            case 1:
+                                col = new Color (modI*32, 255 - ranking%4*32, 0);
+                                break;
+                            case 2:
+                                col = new Color (0, 255 - ranking%4*32, modI*32);
+                                break;
+                            case 3:
+                                col = new Color (0, modI*32, 255 - ranking%4*32);
+                                break;
+                            case 4:
+                                col = new Color (modI*32, 0, 255 -ranking%4*32);
+                                break;
+                            case 5:
+                                col = new Color (255 - ranking%4*32, 0, modI*32);
+                                break;
+                        }
+                        owner.colour = col;
+                    }
+
+                    // add book stats to bucket
                     Book.BookStats bookStats = owner.addStats(i+1, 2011, 0, ranking);
                     buckets.get(i).add(bookStats);
                     ranking++;
@@ -111,6 +151,26 @@ public class VisualizationCanvas extends Canvas {
     @Override
     public void paint(Graphics g)
     {
-        
+        g.setColor(Color.GREEN);
+        for (int i = 0; i < 22; i++)
+        {
+            LinkedList<Book.BookStats> currentBucket = buckets.get(i);
+            int currentX = i * intervalWidth;
+            Iterator<Book.BookStats> it = currentBucket.descendingIterator();
+            while (it.hasNext())
+            {
+                Book.BookStats stat = it.next();
+                int currentY = height-startY-(stat.ranking) * (barHeight + whiteSpaceHeight);
+                g.setColor(stat.owner.colour);
+                g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
+                if (stat.next != null)
+                {
+                    int nextY = height-startY-(stat.next.ranking) * (barHeight + whiteSpaceHeight);
+                    int y [] = {currentY, nextY, nextY+barHeight, currentY+barHeight};
+                    int x [] = {currentX + intervalWidth/2, currentX + intervalWidth, currentX + intervalWidth, currentX + intervalWidth/2};
+                    g.fillPolygon(x, y, 4);
+                }
+            }
+        }
     }
 }

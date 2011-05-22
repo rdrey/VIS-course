@@ -17,7 +17,7 @@ public class Main {
      */
     public static void main(String[] args) {
         JFrame mainFrame = new JFrame();
-        mainFrame.setSize(new Dimension(1440, 600));
+        mainFrame.setSize(new Dimension(1440, 900));
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
              
