@@ -16,28 +16,41 @@ public class Book
 {
     public String title;
     public String author;
+    public String description;
+    public String publisher;
+    public float price;
     public float moodIndex;
     public LinkedList<String> words;
     public LinkedList<Integer> wordWeights;
     public LinkedList<BookStats> statistics;
 
-    public Book(String title, String author, int moodIndex)
+    public Book(String title, String author, String publisher, String description, float price, int moodIndex)
     {
         words = new LinkedList<String>();
         wordWeights = new LinkedList<Integer>();
         statistics = new LinkedList<BookStats>();
         this.title = title;
         this.author = author;
+        this.description = description;
+        this.price = price;
+        this.publisher = publisher;
     }
 
-    public void addStats(int week, int year, int revenue, int ranking)
+    public BookStats addStats(int week, int year, int revenue, int ranking)
     {
-        statistics.add(new BookStats(week, year, revenue, ranking, this));
+        BookStats bookStats = new BookStats(week, year, revenue, ranking, this);
+        statistics.add(bookStats);
+        return bookStats;
     }
 
     public void addWords()
     {
         
+    }
+
+    public String toString()
+    {
+        return title + ": " + author + ", " + publisher + ", $" + price + ", " + description + ", " + statistics.size() + "\n";
     }
 
     public class BookStats
