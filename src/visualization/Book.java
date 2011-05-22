@@ -41,7 +41,11 @@ public class Book
     {
         BookStats bookStats = new BookStats(week, year, revenue, ranking, this);
         if (statistics.size()> 0)
+        {
             statistics.peekLast().next = bookStats;
+            if (statistics.peekLast().week + 1 < week)
+                bookStats.isFirst = true;
+        }
         else
             bookStats.isFirst = true;
         statistics.add(bookStats);

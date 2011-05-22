@@ -88,15 +88,20 @@ public class VisualizationCanvas extends Canvas {
                     Book owner = null;
                     if (i > 0)
                     {
-                        ListIterator<Book.BookStats> it = buckets.get(i-1).listIterator();
-                        while (it.hasNext())
+                        for (int j = 0; j < i; j++)
                         {
-                            Book.BookStats current = it.next();
-                            if (current.owner.title.equals(name))
+                            ListIterator<Book.BookStats> it = buckets.get(j).listIterator();
+                            while (it.hasNext())
                             {
-                                owner = current.owner;
-                                break;
+                                Book.BookStats current = it.next();
+                                if (current.owner.title.equals(name))
+                                {
+                                    owner = current.owner;
+                                    break;
+                                }
                             }
+                            if (owner != null)
+                                break;
                         }
                     }
                     if (owner == null)
@@ -163,7 +168,7 @@ public class VisualizationCanvas extends Canvas {
                 int currentY = height-startY-(16 - stat.ranking) * (barHeight + whiteSpaceHeight);
                 g.setColor(stat.owner.colour);
                 g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
-                if (stat.next != null)
+                if (stat.next != null && stat.week+1 == stat.next.week)
                 {
                     int nextY = height-startY-(16 - stat.next.ranking) * (barHeight + whiteSpaceHeight);
                     int y [] = {currentY, nextY, nextY+barHeight, currentY+barHeight};
