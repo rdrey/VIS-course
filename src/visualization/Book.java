@@ -7,6 +7,7 @@ package visualization;
 
 import java.util.LinkedList;
 import java.awt.Color;
+import java.util.Random;
 /**
  *
  * @author Riz
@@ -14,6 +15,7 @@ import java.awt.Color;
 
 public class Book
 {
+    private static Random r = new Random();
     public String title;
     public String author;
     public String description;
@@ -30,6 +32,7 @@ public class Book
         words = new LinkedList<String>();
         wordWeights = new LinkedList<Integer>();
         statistics = new LinkedList<BookStats>();
+        this.moodIndex = r.nextFloat();
         this.title = title;
         this.author = author;
         this.description = description;

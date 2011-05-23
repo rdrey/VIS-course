@@ -16,6 +16,30 @@ import java.util.*;
  */
 public class VisualizationCanvas extends Canvas implements MouseMotionListener, MouseListener {
 
+    // colours
+    static Color [] colourSelection= {new Color(247, 61, 12), new Color(221, 38, 11),new Color (190, 16, 10),
+new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Color
+(179, 87, 9), new Color (215, 127, 11), new Color (231, 148, 12), new Color
+(186, 136, 9), new Color (228, 194, 11), new Color (191, 142, 10), new Color
+(188, 180, 9), new Color (214, 233, 12), new Color (194, 188, 10), new Color
+(156, 191, 10), new Color (161, 217, 11), new Color (188, 242, 78), new Color
+(112, 230, 11), new Color (114, 191, 10), new Color (107, 253, 13), new Color
+(52, 250, 13), new Color (67, 213, 11), new Color (68, 212, 11), new Color
+(12, 235, 15), new Color (15, 224, 11), new Color (12, 238, 18), new Color
+(9, 183, 25), new Color (12, 243, 74), new Color (10, 202, 39), new Color
+(10, 191, 73), new Color (12, 239, 124), new Color (11, 224, 105), new Color
+(12, 236, 71), new Color (9, 181, 103), new Color (13, 253, 196), new Color
+(12, 237, 224), new Color (10, 205, 176), new Color (9, 190, 154), new Color
+(10, 142, 190), new Color (12, 145, 244), new Color (12, 145, 240), new Color
+(10, 99, 209), new Color (11, 96, 225), new Color (10, 99, 207), new Color
+(10, 53, 209), new Color (12, 40, 239), new Color (11, 51, 215), new Color
+(22, 11, 222), new Color (9, 19, 186) , new Color(76, 48, 195), new Color
+(142, 12, 240), new Color (111, 70, 24), new Color (175, 10, 95), new Color
+(159, 9, 83), new Color (233, 12, 180), new Color (244, 12, 180), new Color
+(189, 9, 128), new Color (237, 12, 128), new Color (216, 10, 146), new Color
+(255, 13, 69), new Color (184, 9, 87), new Color (186, 7, 72), new Color
+(235, 12, 25), new Color (220, 11, 33), new Color (221, 38, 11)
+};
     // basic window dimensions
     int centerY = 400, width = 4224-96, height = 2 * centerY;
 
@@ -119,31 +143,7 @@ public class VisualizationCanvas extends Canvas implements MouseMotionListener, 
                         owner = new Book(name, author, publisher, description, price, 0);
                         
                         // calculate colour
-                        Color col = null;
-                        int modI = i%4;
-                        int divI = i/4;
-                        switch(divI)
-                        {
-                            case 0:
-                                col = new Color(255 - ranking%4*32, modI*32,0);
-                                break;
-                            case 1:
-                                col = new Color (modI*32, 255 - ranking%4*32, 0);
-                                break;
-                            case 2:
-                                col = new Color (0, 255 - ranking%4*32, modI*32);
-                                break;
-                            case 3:
-                                col = new Color (0, modI*32, 255 - ranking%4*32);
-                                break;
-                            case 4:
-                                col = new Color (modI*32, 0, 255 -ranking%4*32);
-                                break;
-                            case 5:
-                                col = new Color (255 - ranking%4*32, 0, modI*32);
-                                break;
-                        }
-                        owner.colour = col;
+                        owner.colour = colourSelection[i*3+(ranking-1)%3];
                     }
 
                     // add book stats to bucket
@@ -181,6 +181,7 @@ public class VisualizationCanvas extends Canvas implements MouseMotionListener, 
                 g.setColor(stat.owner.colour);
                 g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
 
+                               
                 // draw connecting polygon
                 if (stat.next != null && stat.week+1 == stat.next.week)
                 {
@@ -189,9 +190,11 @@ public class VisualizationCanvas extends Canvas implements MouseMotionListener, 
                     int x [] = {currentX + intervalWidth/2, currentX + intervalWidth, currentX + intervalWidth, currentX + intervalWidth/2};
                     g.fillPolygon(x, y, 4);
                 }
-
                 if (stat.isFirst)
                 {
+                    
+                    g.setColor(Color.black);
+                    g.fillRect(currentX, currentY, (int)(intervalWidth/2 * stat.owner.moodIndex), 3);
                     g.setColor(Color.WHITE);
                     if (stat.owner.title.length() < 10)
                         g.drawString(stat.owner.title, currentX + 4, currentY+16);
