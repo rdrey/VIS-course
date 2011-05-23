@@ -281,7 +281,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
 
                     g.clearRect(0, 0, width, windowHeight + 25);
                     String title = currentBook.title;
-                    String auther = currentBook.author;
+                    String author = currentBook.author;
                     String desc = currentBook.description;                    
                     
                     g.setColor(bookColour);
@@ -291,15 +291,27 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     int headingWidth = (fmet.stringWidth(title));
                     if(headingWidth < windowWidth)
                     {
-                        g.drawString(title, windowOffsetX + (windowWidth /2) - (headingWidth/2), windowOffsetY + 20);
+                        windowOffsetY += 20;
+                        g.drawString(title, windowOffsetX + (windowWidth /2) - (headingWidth/2), windowOffsetY);
                     }
                     else
                     {
-                        
+                        String title1 = title.substring(0, title.length()/2);
+                        int title1Width = (fmet.stringWidth(title1));
+                        String title2 = title.substring(title.length()/2);
+                        int title12Width = (fmet.stringWidth(title2));
+                        windowOffsetY += 15;
+                        g.drawString(title1, windowOffsetX + (windowWidth /2) - (title1Width/2), windowOffsetY);
+                        windowOffsetY += 15;
+                        g.drawString(title2, windowOffsetX + (windowWidth /2) - (title12Width/2), windowOffsetY);
                     }
 
                     //Set font for description
-                    g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
+                    g.setFont(new Font("DejaVu Sans", Font.ITALIC, 14));
+                    fmet = getFontMetrics(new Font("DejaVu Sans", Font.ITALIC, 14));
+                    //Draw description
+                    windowOffsetY += 15;
+                    g.drawString(author, windowOffsetX + (windowWidth /2) - (fmet.stringWidth(author))/2, windowOffsetY);
 
                 }
             }
