@@ -46,15 +46,15 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     enum State {OVERALL, DETAIL};
     public static State state;
 
-    // basic window dimensions
-    int centerY = 400, width = 4224-96 + 128 /*width of all intervals minus half of the last one plus 32 for ranking space*/, height = 2 * centerY;
-
     // visualization dimensions
     int startY = 64; // baseline of drawing
-    int barHeight = 24; // height of a single book's bar
-    int intervalWidth = 192; // width of time interval
-    int whiteSpaceHeight = 4; // height of white space between bars
-    int rankingWidth = 64;
+    int barHeight = 16; // height of a single book's bar
+    int intervalWidth = 128; // width of time interval
+    int whiteSpaceHeight = 3; // height of white space between bars
+    int rankingWidth = 48; // space for rank numbers on left and right
+
+    // basic window dimensions
+    int centerY = 274, width = 22*intervalWidth-intervalWidth/2 + rankingWidth*2, height = 2 * centerY;
 
     // book names display
     Book currentBook;
@@ -178,8 +178,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     @Override
     public void paint(Graphics g)
     {
-        g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
-
+        g.setFont(new Font("DejaVu Sans", Font.BOLD, 11));
         // drawing the rank numbers
         for (int i = 0; i < 16; i++)
         {
@@ -188,22 +187,20 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             if (i <9)
                 rank = " " + rank;
             g.setColor(Color.LIGHT_GRAY);
-            g.drawOval(16-4, currentY-1, 26, 26);
-            g.drawLine(16-3+26, currentY+12, 16-3+26+24, currentY+12);
-            g.drawLine(16-3+26, currentY+13, 16-3+26+24, currentY+13);
-            g.drawLine(16-3+26, currentY+14, 16-3+26+24, currentY+14);
-            g.drawOval(width-40-4, currentY-1, 26, 26);
-            g.drawLine(width-40-4, currentY+12, width-40-4-24, currentY+12);
-            g.drawLine(width-40-4, currentY+13, width-40-4-24, currentY+13);
-            g.drawLine(width-40-4, currentY+14, width-40-4-24, currentY+14);
+            g.drawOval(14-2, currentY-1, 19, 19);
+            g.drawLine(14+18, currentY+8, 14+18+16, currentY+8);
+            g.drawLine(14+18, currentY+9, 14+18+16, currentY+9);
+            g.drawOval(width-31-2, currentY-1, 19, 19);
+            g.drawLine(width-31-2, currentY+8, width-31-2-16, currentY+8);
+            g.drawLine(width-31-2, currentY+9, width-31-2-16, currentY+9);
             g.setColor(Color.BLACK);
-            g.drawString(rank,16, currentY + 17);
-            g.drawString(rank,width-40, currentY+17);
+            g.drawString(rank,14, currentY + 12);
+            g.drawString(rank,width-31, currentY+12);
         }
-        g.drawString("Rank", 12, 307);
-        g.drawString("Rank", width-52, 307);
+        g.drawString("Rank", 8, centerY-84);
+        g.drawString("Rank", width-40, centerY-84);
 
-        // drawing the segments
+        // drawing the book segments
         for (int i = 0; i < 22; i++)
         {
             LinkedList<Book.BookStats> currentBucket = buckets.get(i);
@@ -213,7 +210,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             int endY = height-startY + barHeight;
             g.fillRect(currentX-4, beginY-4, intervalWidth/2+8, endY -startY + 8);*/
             Iterator<Book.BookStats> it = currentBucket.listIterator();
-            g.setFont(new Font("Arial", Font.PLAIN, 12));
+            g.setFont(new Font("Arial", Font.PLAIN, 9));
             while (it.hasNext())
             {
                 // draw basic rectangles
@@ -240,15 +237,23 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     //g.setColor(Color.black);
                     //g.fillRect(currentX, currentY, (int)(intervalWidth/2 * stat.owner.moodIndex), 3);
                     g.setColor(Color.WHITE);
-                    if (stat.owner.title.length() < 10)
-                        g.drawString(stat.owner.title, currentX + 4, currentY+16);
+                    if (stat.owner.title.length() < 8)
+                        g.drawString(stat.owner.title, currentX + 2, currentY+12);
                     else
-                        g.drawString(stat.owner.title.substring(0,10) + "...", currentX + 4, currentY+16);
+                        g.drawString(stat.owner.title.substring(0,8) + "...", currentX + 2, currentY+12);
+                }
+
+                // draw ranking number for individual segments
+                if (state == State.DETAIL && stat.owner == currentBook)
+                {
+                    g.setFont(new Font("DejaVu Sans", Font.BOLD, 11));
+                    g.setColor(Color.BLACK);
+                    g.drawString(stat.ranking + "", currentX+intervalWidth/4-4, currentY-4);
                 }
             }
-            g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
+            g.setFont(new Font("DejaVu Sans", Font.BOLD, 11));
             g.setColor(Color.BLACK);
-            g.drawString("   Week " + (i + 1), currentX, height-20);
+            g.drawString(" Week " + (i + 1), currentX, height-32);
 
             // draw name label
             if (bookColour != null)
