@@ -7,6 +7,7 @@ package visualization;
 
 import java.util.LinkedList;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 /**
  *
@@ -20,6 +21,8 @@ public class Book
     public String author;
     public String description;
     public String publisher;
+    public BufferedImage novelPic;
+    public BufferedImage tagPic;
     public float price;
     public float moodIndex;
     public LinkedList<String> words;

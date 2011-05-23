@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.io.*;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -157,6 +158,33 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                         
                         // calculate colour
                         owner.colour = colourSelection[i*3+(ranking-1)%3];
+
+                        //Add images
+                        try {
+                            if(owner.title.equals("THE GIRL WHO KICKED THE HORNET'S NEST"))
+                            {
+                                owner.novelPic = ImageIO.read(new File("resources/HornetsNest.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/HornetsTag.jpg"));
+                            }
+                            else if (owner.title.equals("ROOM"))
+                            {
+                                owner.novelPic = ImageIO.read(new File("resources/Room.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/RoomTag.jpg"));
+                            }
+                            else if(owner.title.equals("A DISCOVERY OF WITCHES"))
+                            {
+                                owner.novelPic = ImageIO.read(new File("resources/Adiscoveryofwitchs.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/DiscoveryTag.jpg"));
+                            }
+                            else
+                            {
+                                owner.novelPic = ImageIO.read(new File("resources/generic.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/genericTag.jpg"));
+                            }
+                        } catch (IOException e)
+                        {
+                            System.out.println("Failed to load image!"+e);
+                        }
                     }
 
                     // add book stats to bucket
@@ -295,6 +323,9 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     g.fillRect(windowOffsetX, windowOffsetY, windowWidth, windowHeight);
                     g.setColor(Color.WHITE);
 
+                    //Draw the novel pic
+                    g.drawImage(currentBook.novelPic, windowOffsetX + (windowWidth*2/3) + 30 , 20, 90 , 135 , this);
+                    g.drawImage(currentBook.tagPic, xOffset + 250, 5, 210, 180, this);
                     int headingWidth = (fmet.stringWidth(title));
                     if(headingWidth < windowWidth)
                     {
@@ -316,9 +347,43 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     //Set font for description
                     g.setFont(new Font("DejaVu Sans", Font.ITALIC, 14));
                     fmet = getFontMetrics(new Font("DejaVu Sans", Font.ITALIC, 14));
-                    //Draw description
+
+                    //Draw Author
                     windowOffsetY += 15;
                     g.drawString(author, windowOffsetX + (windowWidth /2) - (fmet.stringWidth(author))/2, windowOffsetY);
+
+                    //Now draw description
+                    g.setFont(new Font("DejaVu Sans", Font.ITALIC, 10));
+                    fmet = getFontMetrics(new Font("DejaVu Sans", Font.ITALIC, 10));
+                    windowOffsetY += 20;
+
+                    //Max 3 lines of description I think
+                    int descwidth = fmet.stringWidth(desc);
+                    if(descwidth < (windowWidth*2)/3)
+                    {
+                        g.drawString(desc, windowOffsetX + (windowWidth/3) - (descwidth/2), windowOffsetY);
+                    }
+                    else if (descwidth/2 < (windowWidth*2)/3)//two lines
+                    {
+                        String desc1 = desc.substring(0, desc.length()/2);
+                        String desc2 = desc.substring(desc.length()/2);
+
+                        g.drawString(desc1, windowOffsetX + (windowWidth/3) - (fmet.stringWidth(desc1))/2, windowOffsetY);
+                        windowOffsetY += 10;
+                        g.drawString(desc2, windowOffsetX + (windowWidth/3) - (fmet.stringWidth(desc2))/2, windowOffsetY);
+                    }
+                    else //three lines
+                    {
+                        String desc1 = desc.substring(0, desc.length()/3);
+                        String desc2 = desc.substring(desc.length()/3, desc.length()*2/3);
+                        String desc3 = desc.substring(desc.length()*2/3);
+
+                        g.drawString(desc1, windowOffsetX + (windowWidth/3) - (fmet.stringWidth(desc1))/2, windowOffsetY);
+                        windowOffsetY += 10;
+                        g.drawString(desc2, windowOffsetX + (windowWidth/3) - (fmet.stringWidth(desc2))/2, windowOffsetY);
+                        windowOffsetY += 10;
+                        g.drawString(desc3, windowOffsetX + (windowWidth/3) - (fmet.stringWidth(desc3))/2, windowOffsetY);
+                    }                   
 
                 }
             }
