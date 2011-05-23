@@ -172,6 +172,7 @@ public class VisualizationCanvas extends Canvas {
                 g.setColor(stat.owner.colour);
                 g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
 
+                               
                 // draw connecting polygon
                 if (stat.next != null && stat.week+1 == stat.next.week)
                 {
@@ -183,7 +184,8 @@ public class VisualizationCanvas extends Canvas {
                     g.drawLine(currentX + intervalWidth/2, currentY, currentX + intervalWidth, nextY);
                     g.drawLine(currentX + intervalWidth/2, currentY+barHeight, currentX + intervalWidth, nextY+barHeight);*/
                 }
-
+                
+                                         
                 // draw outlines
                 /*g.setColor(Color.BLACK);
                 g.drawLine(currentX, currentY, currentX + intervalWidth/2, currentY);
@@ -191,6 +193,9 @@ public class VisualizationCanvas extends Canvas {
 
                 if (stat.isFirst)
                 {
+                    
+                    g.setColor(Color.black);
+                    g.fillRect(currentX, currentY, (int)(intervalWidth/2 * stat.owner.moodIndex), 3);
                     g.setColor(Color.WHITE);
                     if (stat.owner.title.length() < 10)
                         g.drawString(stat.owner.title, currentX + 4, currentY+16);
