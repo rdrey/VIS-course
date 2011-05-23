@@ -23,6 +23,7 @@ public class Main {
              
         ScrollPane scrollPane = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
         VisualizationCanvas canvas = new VisualizationCanvas();
+        canvas.addMouseMotionListener(canvas);
         scrollPane.add(canvas);
         mainFrame.getContentPane().add(scrollPane);
         

@@ -6,6 +6,7 @@
 package visualization;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
@@ -13,7 +14,7 @@ import java.util.*;
  *
  * @author Riz
  */
-public class VisualizationCanvas extends Canvas {
+public class VisualizationCanvas extends Canvas implements MouseMotionListener, MouseListener {
 
     // basic window dimensions
     int centerY = 400, width = 4224-96, height = 2 * centerY;
@@ -24,12 +25,20 @@ public class VisualizationCanvas extends Canvas {
     int intervalWidth = 192; // width of time interval
     int whiteSpaceHeight = 4; // height of white space between bars
 
+    // book names display
+    Book currentBook;
+    String bookName;
+    Color bookColour;
+
     // array of lists containing book data over time
     ArrayList<LinkedList<Book.BookStats>> buckets;
 
     public VisualizationCanvas()
     {
         super();
+        bookName = "";
+        bookColour = null;
+        currentBook = null;
         setBackground(Color.WHITE);
         setSize(new Dimension(width, height));
         buckets = new ArrayList<LinkedList<Book.BookStats>>();
@@ -179,15 +188,7 @@ public class VisualizationCanvas extends Canvas {
                     int y [] = {currentY, nextY, nextY+barHeight, currentY+barHeight};
                     int x [] = {currentX + intervalWidth/2, currentX + intervalWidth, currentX + intervalWidth, currentX + intervalWidth/2};
                     g.fillPolygon(x, y, 4);
-                    /*g.setColor(Color.BLACK);
-                    g.drawLine(currentX + intervalWidth/2, currentY, currentX + intervalWidth, nextY);
-                    g.drawLine(currentX + intervalWidth/2, currentY+barHeight, currentX + intervalWidth, nextY+barHeight);*/
                 }
-
-                // draw outlines
-                /*g.setColor(Color.BLACK);
-                g.drawLine(currentX, currentY, currentX + intervalWidth/2, currentY);
-                g.drawLine(currentX, currentY+barHeight, currentX + intervalWidth/2, currentY+barHeight);*/
 
                 if (stat.isFirst)
                 {
@@ -201,6 +202,68 @@ public class VisualizationCanvas extends Canvas {
             g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
             g.setColor(Color.BLACK);
             g.drawString("   Week " + (i + 1), currentX, height-20);
+
+            // draw name label
+            if (bookColour != null)
+            {
+                int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 720-256;
+                g.clearRect(xOffset, height, 516, 36);
+                g.setColor(Color.GRAY);
+                g.fillRect(xOffset+4,height+4,512,32);
+                g.setColor(bookColour);
+                g.fillRect(xOffset, height, 512, 32);
+                g.setColor(Color.WHITE);
+                g.drawString(bookName, xOffset+9, height+9+12);
+            }
+            else
+            {
+                g.clearRect((int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 720-256, height, 516, 36);
+            }
+        }
+    }
+
+    public void mouseDragged(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mouseExited(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
+    
+    public void mouseClicked(MouseEvent e)
+    {
+    }
+
+    public void mouseMoved(MouseEvent e)
+    {
+        if (e.getX()%intervalWidth <= intervalWidth/2)
+        {
+            int bucket = e.getX()/intervalWidth;
+            int beginY = height-startY-15 * (barHeight + whiteSpaceHeight);
+            int numEntries = buckets.get(bucket).size();
+            int endY = height-startY - (16 - numEntries) * (barHeight+whiteSpaceHeight) + barHeight;
+            if (e.getY() >= beginY && e.getY() <= endY)
+            {
+                int index = (e.getY() - beginY)/(barHeight+whiteSpaceHeight);
+                Book.BookStats stat = buckets.get(bucket).get(index);
+                if (!bookName.equals(stat.owner.title + " by " + stat.owner.author))
+                {
+                    currentBook = stat.owner;
+                    bookName = stat.owner.title + " by " + stat.owner.author;
+                    bookColour = stat.owner.colour;
+                    this.paint(this.getGraphics());
+                }
+            }
+            else if (bookColour != null)
+            {
+                bookName = "";
+                bookColour = null;
+                this.paint(this.getGraphics());
+            }
+        }
+        else if (bookColour != null)
+        {
+            bookName = "";
+            bookColour = null;
+            this.paint(this.getGraphics());
         }
     }
 }
