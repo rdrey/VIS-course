@@ -20,10 +20,14 @@ public class Main {
         mainFrame.setSize(new Dimension(1440, 900));
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-             
+        mainFrame.setTitle("Book Picker");
+        
         ScrollPane scrollPane = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
+
         VisualizationCanvas canvas = new VisualizationCanvas();
         canvas.addMouseMotionListener(canvas);
+        canvas.addMouseListener(canvas);
+        
         scrollPane.add(canvas);
         mainFrame.getContentPane().add(scrollPane);
         

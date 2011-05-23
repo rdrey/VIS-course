@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 
 /**
  *
@@ -40,6 +41,11 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
 (255, 13, 69), new Color (184, 9, 87), new Color (186, 7, 72), new Color
 (235, 12, 25), new Color (220, 11, 33), new Color (221, 38, 11)
 };
+
+    // display state of canvas
+    enum State {OVERALL, DETAIL};
+    public static State state;
+
     // basic window dimensions
     int centerY = 400, width = 4224-96, height = 2 * centerY;
 
@@ -57,12 +63,17 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     // array of lists containing book data over time
     ArrayList<LinkedList<Book.BookStats>> buckets;
 
+    // overlay interface
+    public JLabel bookNameLabel;
+
     public VisualizationCanvas()
     {
         super();
+        state = State.OVERALL;
         bookName = "";
         bookColour = null;
         currentBook = null;
+        bookNameLabel = null;
         setBackground(Color.WHITE);
         setSize(new Dimension(width, height));
         buckets = new ArrayList<LinkedList<Book.BookStats>>();
@@ -178,7 +189,10 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 // draw basic rectangles
                 Book.BookStats stat = it.next();
                 int currentY = height-startY-(16 - stat.ranking) * (barHeight + whiteSpaceHeight);
-                g.setColor(stat.owner.colour);
+                if (state == State.OVERALL || stat.owner == currentBook)
+                    g.setColor(stat.owner.colour);
+                else
+                    g.setColor(new Color(224,224,224));
                 g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
 
                                
@@ -190,7 +204,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     int x [] = {currentX + intervalWidth/2, currentX + intervalWidth, currentX + intervalWidth, currentX + intervalWidth/2};
                     g.fillPolygon(x, y, 4);
                 }
-                if (stat.isFirst)
+                if (stat.isFirst && (state == State.OVERALL || currentBook == stat.owner))
                 {
                     
                     g.setColor(Color.black);
@@ -220,7 +234,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             }
             else
             {
-                g.clearRect((int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 720-256, height, 516, 36);
+                g.clearRect(0, height, width, 36);
             }
         }
     }
@@ -233,25 +247,48 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     
     public void mouseClicked(MouseEvent e)
     {
+        if (state == State.OVERALL)
+        {
+            if (currentBook != null)
+            {
+                state = State.DETAIL;
+                this.paint(this.getGraphics());
+            }
+        }
+        else
+        {
+            state = State.OVERALL;
+            this.paint(this.getGraphics());
+        }
     }
 
     public void mouseMoved(MouseEvent e)
     {
-        if (e.getX()%intervalWidth <= intervalWidth/2)
+        if (state == State.OVERALL)
         {
-            int bucket = e.getX()/intervalWidth;
-            int beginY = height-startY-15 * (barHeight + whiteSpaceHeight);
-            int numEntries = buckets.get(bucket).size();
-            int endY = height-startY - (16 - numEntries) * (barHeight+whiteSpaceHeight) + barHeight;
-            if (e.getY() >= beginY && e.getY() <= endY)
+            if (e.getX()%intervalWidth <= intervalWidth/2)
             {
-                int index = (e.getY() - beginY)/(barHeight+whiteSpaceHeight);
-                Book.BookStats stat = buckets.get(bucket).get(index);
-                if (!bookName.equals(stat.owner.title + " by " + stat.owner.author))
+                int bucket = e.getX()/intervalWidth;
+                int beginY = height-startY-15 * (barHeight + whiteSpaceHeight);
+                int numEntries = buckets.get(bucket).size();
+                int endY = height-startY - (16 - numEntries) * (barHeight+whiteSpaceHeight) + barHeight;
+                if (e.getY() >= beginY && e.getY() <= endY)
                 {
-                    currentBook = stat.owner;
-                    bookName = stat.owner.title + " by " + stat.owner.author;
-                    bookColour = stat.owner.colour;
+                    int index = (e.getY() - beginY)/(barHeight+whiteSpaceHeight);
+                    Book.BookStats stat = buckets.get(bucket).get(index);
+                    if (!bookName.equals(stat.owner.title + " by " + stat.owner.author))
+                    {
+                        currentBook = stat.owner;
+                        bookName = stat.owner.title + " by " + stat.owner.author;
+                        bookColour = stat.owner.colour;
+                        this.paint(this.getGraphics());
+                    }
+                }
+                else if (bookColour != null)
+                {
+                    bookName = "";
+                    bookColour = null;
+                    currentBook = null;
                     this.paint(this.getGraphics());
                 }
             }
@@ -259,14 +296,9 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             {
                 bookName = "";
                 bookColour = null;
+                currentBook = null;
                 this.paint(this.getGraphics());
             }
-        }
-        else if (bookColour != null)
-        {
-            bookName = "";
-            bookColour = null;
-            this.paint(this.getGraphics());
         }
     }
 }
