@@ -255,17 +255,19 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             g.setColor(Color.BLACK);
             g.drawString(" Week " + (i + 1), currentX, height-32);
 
-            // draw name label
+            // draw detailed interface
             if (bookColour != null)
             {
-                int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 400-128;
-                g.clearRect(0, height, width, 36);
+                // draw bottom label
+                int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 400-150;
+                g.clearRect(0, height-20, width, 22);
                 g.setColor(Color.GRAY);
-                g.fillRect(xOffset+4,height+4,256,32);
+                g.fillRect(xOffset+2,height-20+2,300,20);
                 g.setColor(bookColour);
-                g.fillRect(xOffset, height, 256, 32);
+                g.fillRect(xOffset, height-20, 300, 20);
                 g.setColor(Color.WHITE);
-                g.drawString(bookName, xOffset+9, height+9+12);
+                g.drawString(bookName, xOffset+4, height-17+11);
+
                 if (state == state.DETAIL)
                 {
                     int windowOffsetX = xOffset - 450;
@@ -305,7 +307,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             }
             else
             {
-                g.clearRect(0, height, width, 36);
+                g.clearRect(0, height-20, width, 22);
             }
         }
     }
@@ -347,10 +349,10 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 {
                     int index = (e.getY() - beginY)/(barHeight+whiteSpaceHeight);
                     Book.BookStats stat = buckets.get(bucket).get(index);
-                    if (!bookName.equals(stat.owner.title + " by " + stat.owner.author))
+                    if (!bookName.equals(stat.owner.title))
                     {
                         currentBook = stat.owner;
-                        bookName = stat.owner.title + " by " + stat.owner.author;
+                        bookName = stat.owner.title;
                         bookColour = stat.owner.colour;
                         this.paint(this.getGraphics());
                     }
