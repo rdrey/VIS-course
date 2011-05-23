@@ -5,10 +5,9 @@
 
 package visualization;
 
-import java.util.LinkedList;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.Random;
+import java.util.*;
 /**
  *
  * @author Riz

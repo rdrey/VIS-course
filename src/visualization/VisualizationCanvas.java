@@ -69,6 +69,9 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     // overlay interface
     public JLabel bookNameLabel;
 
+    // time stuff
+    public GregorianCalendar date;
+
     public VisualizationCanvas()
     {
         super();
@@ -77,6 +80,8 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
         bookColour = null;
         currentBook = null;
         bookNameLabel = null;
+        date = new GregorianCalendar();
+        date.set(Calendar.YEAR, 2011);
         setBackground(Color.WHITE);
         setSize(new Dimension(width, height));
         buckets = new ArrayList<LinkedList<Book.BookStats>>();
@@ -285,7 +290,8 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             }
             g.setFont(new Font("DejaVu Sans", Font.BOLD, 11));
             g.setColor(Color.BLACK);
-            g.drawString(" Week " + (i + 1), currentX, height-32);
+            date.set(Calendar.WEEK_OF_YEAR, i+2);
+            g.drawString(date.get(Calendar.DAY_OF_MONTH)+ " " + date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ENGLISH) + " '11", currentX, height-32);
 
             // draw detailed interface
             if (bookColour != null)
