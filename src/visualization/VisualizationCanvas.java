@@ -15,7 +15,7 @@ import javax.swing.*;
  *
  * @author Riz
  */
-public class VisualizationCanvas extends Canvas implements MouseMotionListener, MouseListener {
+public class VisualizationCanvas extends Canvas implements MouseMotionListener, MouseListener, AdjustmentListener {
 
     // colours
     static Color [] colourSelection= {new Color(247, 61, 12), new Color(221, 38, 11),new Color (190, 16, 10),
@@ -47,13 +47,14 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     public static State state;
 
     // basic window dimensions
-    int centerY = 400, width = 4224-96, height = 2 * centerY;
+    int centerY = 400, width = 4224-96 + 128 /*width of all intervals minus half of the last one plus 32 for ranking space*/, height = 2 * centerY;
 
     // visualization dimensions
     int startY = 64; // baseline of drawing
     int barHeight = 24; // height of a single book's bar
     int intervalWidth = 192; // width of time interval
     int whiteSpaceHeight = 4; // height of white space between bars
+    int rankingWidth = 64;
 
     // book names display
     Book currentBook;
@@ -177,11 +178,40 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     @Override
     public void paint(Graphics g)
     {
-        g.setColor(Color.GREEN);
+        g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
+
+        // drawing the rank numbers
+        for (int i = 0; i < 16; i++)
+        {
+            int currentY = height-startY-(15 - i) * (barHeight + whiteSpaceHeight);
+            String rank = i+1+"";
+            if (i <9)
+                rank = " " + rank;
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawOval(16-4, currentY-1, 26, 26);
+            g.drawLine(16-3+26, currentY+12, 16-3+26+24, currentY+12);
+            g.drawLine(16-3+26, currentY+13, 16-3+26+24, currentY+13);
+            g.drawLine(16-3+26, currentY+14, 16-3+26+24, currentY+14);
+            g.drawOval(width-40-4, currentY-1, 26, 26);
+            g.drawLine(width-40-4, currentY+12, width-40-4-24, currentY+12);
+            g.drawLine(width-40-4, currentY+13, width-40-4-24, currentY+13);
+            g.drawLine(width-40-4, currentY+14, width-40-4-24, currentY+14);
+            g.setColor(Color.BLACK);
+            g.drawString(rank,16, currentY + 17);
+            g.drawString(rank,width-40, currentY+17);
+        }
+        g.drawString("Rank", 12, 307);
+        g.drawString("Rank", width-52, 307);
+
+        // drawing the segments
         for (int i = 0; i < 22; i++)
         {
             LinkedList<Book.BookStats> currentBucket = buckets.get(i);
-            int currentX = i * intervalWidth;
+            int currentX = rankingWidth+i * intervalWidth;
+            /*g.setColor(new Color(224,224,224));
+            int beginY = height-startY-15 * (barHeight + whiteSpaceHeight);
+            int endY = height-startY + barHeight;
+            g.fillRect(currentX-4, beginY-4, intervalWidth/2+8, endY -startY + 8);*/
             Iterator<Book.BookStats> it = currentBucket.listIterator();
             g.setFont(new Font("Arial", Font.PLAIN, 12));
             while (it.hasNext())
@@ -207,8 +237,8 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 if (stat.isFirst && (state == State.OVERALL || currentBook == stat.owner))
                 {
                     
-                    g.setColor(Color.black);
-                    g.fillRect(currentX, currentY, (int)(intervalWidth/2 * stat.owner.moodIndex), 3);
+                    //g.setColor(Color.black);
+                    //g.fillRect(currentX, currentY, (int)(intervalWidth/2 * stat.owner.moodIndex), 3);
                     g.setColor(Color.WHITE);
                     if (stat.owner.title.length() < 10)
                         g.drawString(stat.owner.title, currentX + 4, currentY+16);
@@ -224,13 +254,17 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             if (bookColour != null)
             {
                 int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 720-256;
-                g.clearRect(xOffset, height, 516, 36);
+                g.clearRect(0, height, width, 36);
                 g.setColor(Color.GRAY);
                 g.fillRect(xOffset+4,height+4,512,32);
                 g.setColor(bookColour);
                 g.fillRect(xOffset, height, 512, 32);
                 g.setColor(Color.WHITE);
                 g.drawString(bookName, xOffset+9, height+9+12);
+                if (state == state.DETAIL)
+                {
+                    
+                }
             }
             else
             {
@@ -266,9 +300,9 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
     {
         if (state == State.OVERALL)
         {
-            if (e.getX()%intervalWidth <= intervalWidth/2)
+            if (e.getX() > rankingWidth && e.getX() < width - rankingWidth && (e.getX()-rankingWidth)%intervalWidth <= intervalWidth/2)
             {
-                int bucket = e.getX()/intervalWidth;
+                int bucket = (e.getX()-rankingWidth)/intervalWidth;
                 int beginY = height-startY-15 * (barHeight + whiteSpaceHeight);
                 int numEntries = buckets.get(bucket).size();
                 int endY = height-startY - (16 - numEntries) * (barHeight+whiteSpaceHeight) + barHeight;
@@ -300,5 +334,10 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 this.paint(this.getGraphics());
             }
         }
+    }
+
+    public void adjustmentValueChanged (AdjustmentEvent e)
+    {
+        this.paint(this.getGraphics());
     }
 }

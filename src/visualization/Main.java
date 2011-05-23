@@ -10,7 +10,7 @@ import javax.swing.*;
  *
  * @author Riz
  */
-public class Main {
+public class Main{
 
     /**
      * @param args the command line arguments
@@ -29,6 +29,7 @@ public class Main {
         canvas.addMouseListener(canvas);
         
         scrollPane.add(canvas);
+        scrollPane.getHAdjustable().addAdjustmentListener(canvas);
         mainFrame.getContentPane().add(scrollPane);
         
         mainFrame.setVisible(true);
