@@ -277,7 +277,10 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 {
                     g.setFont(new Font("DejaVu Sans", Font.BOLD, 11));
                     g.setColor(Color.BLACK);
-                    g.drawString(stat.ranking + "", currentX+intervalWidth/4-4, currentY-4);
+                    if (stat.ranking < 10)
+                        g.drawString(stat.ranking + "", currentX+intervalWidth/4-4, currentY-4);
+                    else
+                        g.drawString(stat.ranking + "", currentX+intervalWidth/4-8, currentY-4);
                 }
             }
             g.setFont(new Font("DejaVu Sans", Font.BOLD, 11));
