@@ -258,12 +258,12 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             // draw name label
             if (bookColour != null)
             {
-                int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 720-256;
+                int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 400-128;
                 g.clearRect(0, height, width, 36);
                 g.setColor(Color.GRAY);
-                g.fillRect(xOffset+4,height+4,512,32);
+                g.fillRect(xOffset+4,height+4,256,32);
                 g.setColor(bookColour);
-                g.fillRect(xOffset, height, 512, 32);
+                g.fillRect(xOffset, height, 256, 32);
                 g.setColor(Color.WHITE);
                 g.drawString(bookName, xOffset+9, height+9+12);
                 if (state == state.DETAIL)
