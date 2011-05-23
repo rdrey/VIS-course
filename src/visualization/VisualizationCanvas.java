@@ -270,7 +270,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
 
                 if (state == state.DETAIL)
                 {
-                    int windowOffsetX = xOffset - 450;
+                    int windowOffsetX = xOffset - 245;
                     int windowOffsetY = 15;
                     int windowWidth = 400;
                     int windowHeight = 150;
@@ -284,10 +284,12 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     g.clearRect(0, 0, width, windowHeight + 25);
                     String title = currentBook.title;
                     String author = currentBook.author;
-                    String desc = currentBook.description;                    
-                    
+                    String desc = currentBook.description;
+
+                    g.setColor(Color.GRAY);
+                    g.fillRect(windowOffsetX+2, windowOffsetY+2, windowWidth, windowHeight);
                     g.setColor(bookColour);
-                    g.fill3DRect(windowOffsetX, windowOffsetY, windowWidth, windowHeight, true);
+                    g.fillRect(windowOffsetX, windowOffsetY, windowWidth, windowHeight);
                     g.setColor(Color.WHITE);
 
                     int headingWidth = (fmet.stringWidth(title));
@@ -316,9 +318,13 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     g.drawString(author, windowOffsetX + (windowWidth /2) - (fmet.stringWidth(author))/2, windowOffsetY);
 
                 }
+                else
+                {
+                    g.clearRect(0, 0, width, 175);
+                }
             }
             else
-            {
+            {                
                 g.clearRect(0, height-20, width, 22);
             }
         }
