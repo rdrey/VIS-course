@@ -16,13 +16,13 @@ import java.util.*;
 public class VisualizationCanvas extends Canvas {
 
     // basic window dimensions
-    int centerY = 450, width = 5760, height = 2 * centerY;
+    int centerY = 400, width = 4224-96, height = 2 * centerY;
 
     // visualization dimensions
     int startY = 64; // baseline of drawing
-    int barHeight = 32; // height of a single book's bar
-    int intervalWidth = 256; // width of time interval
-    int whiteSpaceHeight = 8; // height of white space between bars
+    int barHeight = 24; // height of a single book's bar
+    int intervalWidth = 192; // width of time interval
+    int whiteSpaceHeight = 4; // height of white space between bars
 
     // array of lists containing book data over time
     ArrayList<LinkedList<Book.BookStats>> buckets;
@@ -30,6 +30,7 @@ public class VisualizationCanvas extends Canvas {
     public VisualizationCanvas()
     {
         super();
+        setBackground(Color.WHITE);
         setSize(new Dimension(width, height));
         buckets = new ArrayList<LinkedList<Book.BookStats>>();
         for (int i = 0; i < 22; i++)
@@ -162,28 +163,44 @@ public class VisualizationCanvas extends Canvas {
             LinkedList<Book.BookStats> currentBucket = buckets.get(i);
             int currentX = i * intervalWidth;
             Iterator<Book.BookStats> it = currentBucket.listIterator();
+            g.setFont(new Font("Arial", Font.PLAIN, 12));
             while (it.hasNext())
             {
+                // draw basic rectangles
                 Book.BookStats stat = it.next();
                 int currentY = height-startY-(16 - stat.ranking) * (barHeight + whiteSpaceHeight);
                 g.setColor(stat.owner.colour);
                 g.fillRect(currentX, currentY, intervalWidth/2, barHeight);
+
+                // draw connecting polygon
                 if (stat.next != null && stat.week+1 == stat.next.week)
                 {
                     int nextY = height-startY-(16 - stat.next.ranking) * (barHeight + whiteSpaceHeight);
                     int y [] = {currentY, nextY, nextY+barHeight, currentY+barHeight};
                     int x [] = {currentX + intervalWidth/2, currentX + intervalWidth, currentX + intervalWidth, currentX + intervalWidth/2};
                     g.fillPolygon(x, y, 4);
+                    /*g.setColor(Color.BLACK);
+                    g.drawLine(currentX + intervalWidth/2, currentY, currentX + intervalWidth, nextY);
+                    g.drawLine(currentX + intervalWidth/2, currentY+barHeight, currentX + intervalWidth, nextY+barHeight);*/
                 }
+
+                // draw outlines
+                /*g.setColor(Color.BLACK);
+                g.drawLine(currentX, currentY, currentX + intervalWidth/2, currentY);
+                g.drawLine(currentX, currentY+barHeight, currentX + intervalWidth/2, currentY+barHeight);*/
+
                 if (stat.isFirst)
                 {
                     g.setColor(Color.WHITE);
-                    if (stat.owner.title.length() < 15)
-                        g.drawString(stat.owner.title, currentX + 4, currentY+20);
+                    if (stat.owner.title.length() < 10)
+                        g.drawString(stat.owner.title, currentX + 4, currentY+16);
                     else
-                        g.drawString(stat.owner.title.substring(0,15) + "...", currentX + 4, currentY+20);
+                        g.drawString(stat.owner.title.substring(0,10) + "...", currentX + 4, currentY+16);
                 }
             }
+            g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
+            g.setColor(Color.BLACK);
+            g.drawString("   Week " + (i + 1), currentX, height-20);
         }
     }
 }

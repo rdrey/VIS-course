@@ -21,7 +21,7 @@ public class Main {
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
              
-        ScrollPane scrollPane = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
+        ScrollPane scrollPane = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
         VisualizationCanvas canvas = new VisualizationCanvas();
         scrollPane.add(canvas);
         mainFrame.getContentPane().add(scrollPane);
