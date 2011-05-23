@@ -270,16 +270,16 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 {
                     int windowOffsetX = xOffset - 450;
                     int windowOffsetY = 15;
-                    int windowWidth = 450;
-                    int windowHeight = 250;
+                    int windowWidth = 400;
+                    int windowHeight = 150;
 
                     //Use this to determine width of strings in pixels, so we can center
                     FontMetrics fmet;
-                    Font heading = new Font("DejaVu Sans", Font.BOLD, 20);
-                    fmet = getFontMetrics(new Font("DejaVu Sans", Font.BOLD, 20));
+                    Font heading = new Font("DejaVu Sans", Font.BOLD, 16);
+                    fmet = getFontMetrics(heading);
                     g.setFont(heading);
 
-                    g.clearRect(0, 0, width, windowHeight + 50);
+                    g.clearRect(0, 0, width, windowHeight + 25);
                     String title = currentBook.title;
                     String auther = currentBook.author;
                     String desc = currentBook.description;                    
