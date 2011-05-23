@@ -263,7 +263,39 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                 g.drawString(bookName, xOffset+9, height+9+12);
                 if (state == state.DETAIL)
                 {
+                    int windowOffsetX = xOffset - 450;
+                    int windowOffsetY = 15;
+                    int windowWidth = 450;
+                    int windowHeight = 250;
+
+                    //Use this to determine width of strings in pixels, so we can center
+                    FontMetrics fmet;
+                    Font heading = new Font("DejaVu Sans", Font.BOLD, 20);
+                    fmet = getFontMetrics(new Font("DejaVu Sans", Font.BOLD, 20));
+                    g.setFont(heading);
+
+                    g.clearRect(0, 0, width, windowHeight + 50);
+                    String title = currentBook.title;
+                    String auther = currentBook.author;
+                    String desc = currentBook.description;                    
                     
+                    g.setColor(bookColour);
+                    g.fill3DRect(windowOffsetX, windowOffsetY, windowWidth, windowHeight, true);
+                    g.setColor(Color.WHITE);
+
+                    int headingWidth = (fmet.stringWidth(title));
+                    if(headingWidth < windowWidth)
+                    {
+                        g.drawString(title, windowOffsetX + (windowWidth /2) - (headingWidth/2), windowOffsetY + 20);
+                    }
+                    else
+                    {
+                        
+                    }
+
+                    //Set font for description
+                    g.setFont(new Font("DejaVu Sans", Font.BOLD, 14));
+
                 }
             }
             else
