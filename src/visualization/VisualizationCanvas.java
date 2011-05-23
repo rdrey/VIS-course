@@ -164,17 +164,17 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                             if(owner.title.equals("THE GIRL WHO KICKED THE HORNET'S NEST"))
                             {
                                 owner.novelPic = ImageIO.read(new File("resources/HornetsNest.jpg"));
-                                owner.tagPic = ImageIO.read(new File("resources/HornetsTag.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/HornetsTagColour.jpg"));
                             }
                             else if (owner.title.equals("ROOM"))
                             {
                                 owner.novelPic = ImageIO.read(new File("resources/Room.jpg"));
-                                owner.tagPic = ImageIO.read(new File("resources/RoomTag.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/RoomTagColour.jpg"));
                             }
                             else if(owner.title.equals("A DISCOVERY OF WITCHES"))
                             {
                                 owner.novelPic = ImageIO.read(new File("resources/Adiscoveryofwitchs.jpg"));
-                                owner.tagPic = ImageIO.read(new File("resources/DiscoveryTag.jpg"));
+                                owner.tagPic = ImageIO.read(new File("resources/DiscoveryTagColour.jpg"));
                             }
                             else
                             {
@@ -304,8 +304,8 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
 
                 if (state == state.DETAIL)
                 {
-                    int windowOffsetX = xOffset - 245;
-                    int windowOffsetY = 15;
+                    int windowOffsetX = xOffset - 240;
+                    int windowOffsetY = 10;
                     int windowWidth = 400;
                     int windowHeight = 150;
 
@@ -330,10 +330,10 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     g.drawImage(currentBook.novelPic, windowOffsetX + (windowWidth*2/3) + 30 , 20, 90 , 135 , this);
                     g.drawImage(currentBook.tagPic, xOffset + 250, 5, 210, 180, this);
                     int headingWidth = (fmet.stringWidth(title));
-                    if(headingWidth < windowWidth)
+                    if(headingWidth < windowWidth *2 /3)
                     {
-                        windowOffsetY += 20;
-                        g.drawString(title, windowOffsetX + (windowWidth /2) - (headingWidth/2), windowOffsetY);
+                        windowOffsetY += 30;
+                        g.drawString(title, windowOffsetX + (windowWidth *1 /3) - (headingWidth/2), windowOffsetY);
                     }
                     else
                     {
@@ -341,10 +341,10 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                         int title1Width = (fmet.stringWidth(title1));
                         String title2 = title.substring(title.length()/2);
                         int title12Width = (fmet.stringWidth(title2));
+                        windowOffsetY += 30;
+                        g.drawString(title1, windowOffsetX + (windowWidth *1/3) - (title1Width/2), windowOffsetY);
                         windowOffsetY += 15;
-                        g.drawString(title1, windowOffsetX + (windowWidth /2) - (title1Width/2), windowOffsetY);
-                        windowOffsetY += 15;
-                        g.drawString(title2, windowOffsetX + (windowWidth /2) - (title12Width/2), windowOffsetY);
+                        g.drawString(title2, windowOffsetX + (windowWidth *1/3) - (title12Width/2), windowOffsetY);
                     }
 
                     //Set font for description
@@ -353,7 +353,22 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
 
                     //Draw Author
                     windowOffsetY += 15;
-                    g.drawString(author, windowOffsetX + (windowWidth /2) - (fmet.stringWidth(author))/2, windowOffsetY);
+                    int authorLength = fmet.stringWidth(author);
+                    if(authorLength < windowWidth *2 /3)
+                    {
+                        g.drawString(author, windowOffsetX + (windowWidth *1/3) - (authorLength/2), windowOffsetY);
+                    }
+                    else
+                    {
+                        String author1 = author.substring(0, author.length()/2);
+                        int author1Width = (fmet.stringWidth(author1));
+                        String author2 = author.substring(author.length()/2);
+                        int author2Width = (fmet.stringWidth(author2));
+
+                        g.drawString(author1, windowOffsetX + (windowWidth *1/3) - (author1Width/2), windowOffsetY);
+                        windowOffsetY += 15;
+                        g.drawString(author2, windowOffsetX + (windowWidth *1/3) - (author2Width/2), windowOffsetY);
+                    }
 
                     //Now draw description
                     g.setFont(new Font("DejaVu Sans", Font.ITALIC, 10));
