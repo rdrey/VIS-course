@@ -7,6 +7,7 @@ package visualization;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.*;
 import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
@@ -288,13 +289,15 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
             {
                 // draw bottom label
                 int xOffset = (int)((ScrollPane)(this.getParent())).getScrollPosition().getX() + 400-150;
+                FontMetrics metric = getFontMetrics(g.getFont());
+                int stringWidth = metric.stringWidth(bookName);
                 g.clearRect(0, height-20, width, 22);
                 g.setColor(Color.GRAY);
                 g.fillRect(xOffset+2,height-20+2,300,20);
                 g.setColor(bookColour);
                 g.fillRect(xOffset, height-20, 300, 20);
                 g.setColor(Color.WHITE);
-                g.drawString(bookName, xOffset+4, height-17+11);
+                g.drawString(bookName, xOffset+(300-stringWidth)/2, height-17+11);
 
                 if (state == state.DETAIL)
                 {
@@ -383,10 +386,6 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
                     }                   
 
                 }
-                else
-                {
-                    g.clearRect(0, 0, width, 175);
-                }
             }
             else
             {                
@@ -414,6 +413,7 @@ new Color(235, 101, 12),new Color (243, 101, 12),new Color (227, 93, 11), new Co
         else
         {
             state = State.OVERALL;
+            this.getGraphics().clearRect(0, 0, width, height);
             this.paint(this.getGraphics());
         }
     }
